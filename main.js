@@ -5,9 +5,9 @@ const generateButton = document.getElementById('generate-button');
 const output = document.getElementById('output-div');
 const spinner = document.getElementById('spinner');
 
-const summarization = await pipeline(
-    'summarization', // task
-    'Xenova/t5-base' // model
+const sentiment = await pipeline(
+    'text-classification', // task
+    'Xenova/distilbert-base-uncased-finetuned-sst-2-english' // model
 );
 
 generateButton.removeAttribute('disabled');
@@ -17,11 +17,12 @@ generateButton.addEventListener('click', async () => {
     generateButton.setAttribute("disabled", true);
 
     const input = longTextInput.value;
-    const result = await summarization(input, {
+    const result = await sentiment(input, {
         min_length: 50, max_length: 250,
     });
 
-    output.innerHTML = result[0].summary_text;
+    output.innerHTML = result[0].label;
+    console.log(result);
     spinner.classList.remove('show');
     generateButton.removeAttribute("disabled");
     output.style.display = 'block';
